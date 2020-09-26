@@ -1,19 +1,20 @@
 package org.fasttrackit;
 
-
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 
 public class Hooks {
 
     @Before
-    public void setup() {
+    public void setup(){
         String browser = System.getProperty("browser", "chrome");
         DriverFactory.initDriver(browser);
-    }
 
+    }
     @After
-    public void tearDown() {
-        //DriverFactory.getDriver().quit();
+    public void tearDown(){
+      //  DriverFactory.getDriver().quit();
+
     }
 }
+
