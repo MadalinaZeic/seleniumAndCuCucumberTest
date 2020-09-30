@@ -11,6 +11,8 @@ import webviews.ProductsGrid;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -40,27 +42,36 @@ public class ProductsGridSteps extends TestBase {
 
     @Then("^the products are ordered by price in (.+) order$")
     public void theProductsAreOrderedByPriceInDescendingOrder(String sortDirection) {
+
         List<Double> prices = new ArrayList<>();
         for (WebElement priceContainer : productsGrid.getProductPrices()) {
+
             String priceText = priceContainer.getText();
-            double price = Double.parseDouble(priceText.split("[$]")[1]);
-            prices.add(price);
-        }
 
-        assertThat("No product prices could be extracted.", prices, hasSize(greaterThan(0)));
+            Pattern pattern = Pattern.compile("(\\d+.\\d+).*");
+            Matcher matcher = pattern.matcher(priceText);
 
-        List<Double> sortedPrices = new ArrayList<>(prices);
-        Comparator<Double> comparator;
+            if (matcher.find()) {
+                double price = Double.parseDouble(matcher.group(1).replace(".", "."));
+                prices.add(price);
+            }
 
-        if (sortDirection.equals("ascending")){
-            comparator = Comparator.naturalOrder();
-        } else{
-            comparator  = Comparator.reverseOrder();
-        }
+            assertThat("No product prices could be extracted.", prices, hasSize(greaterThan(0)));
+
+            List<Double> sortedPrices = new ArrayList<>(prices);
+            Comparator<Double> comparator;
+
+            if (sortDirection.equals("ascending")) {
+                comparator = Comparator.naturalOrder();
+            } else {
+                comparator = Comparator.reverseOrder();
+            }
+
             sortedPrices.sort(comparator);
-        assertThat("Products are not ordered correctly.", prices, equalTo(sortedPrices) );
 
-
+            assertThat("Products are not ordered correctly.", prices, equalTo(sortedPrices));
+        }
     }
+
 }
 

@@ -1,12 +1,9 @@
 package org.fasttrackit.stepdefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import org.fasttrackit.TestBase;
 import org.openqa.selenium.support.PageFactory;
 import webviews.Header;
-
-import java.sql.Driver;
 
 public class HeaderSteps extends TestBase {
     private Header header = PageFactory.initElements(driver, Header.class);
